@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: simple-fe-ingress
+  namespace: frontend
+  annotations:
+    # Nginx 특화 설정이 필요할 때만 사용 (예: Rewrite, Body size 등)
+    nginx.ingress.kubernetes.io/proxy-body-size: "10m"
+spec:
+  # [표준 변경] annotation 대신 ingressClassName을 사용하는 것이 현재 표준입니다.
+  ingressClassName: nginx
+  rules:
+    - host: simple-fe.192.168.41.32.sslip.io
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: simple-fe
+                port:
+                  number: 80

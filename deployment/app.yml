@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-fe
+  namespace: frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: simple-fe
+  template:
+    metadata:
+      labels:
+        app: simple-fe
+    spec:
+      containers:
+        - name: simple-fe
+          image: lemonbin/simple-fe
+          ports:
+            - containerPort: 8080
+              name: simple-fe
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: simple-fe
+  namespace: frontend
+spec:
+  type: ClusterIP
+  selector:
+    app: simple-fe
+  ports:
+    - protocol: TCP
+      port: 80 # Ingress가 바라볼 포트
+      targetPort: simple-fe # 컨테이너 내부 포트
+#      nodePort: 30080
+#       targetPort: 8080
+#       nodePort: 30080 # 로컬에서 접속할 포트
